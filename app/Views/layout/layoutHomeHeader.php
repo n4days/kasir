@@ -14,7 +14,10 @@
             <a href="index3.html" class="nav-link">Home</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="/logout" class="nav-link">Logout</a>
+            <form id="logout" action="/logout" method="POST">
+                <!-- form elements -->
+                <a href="#" onclick="document.getElementById('logout').submit()" class="nav-link">Logout</a>
+            </form>
         </li>
     </ul>
 
