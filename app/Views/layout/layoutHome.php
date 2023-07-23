@@ -26,6 +26,12 @@
     <link rel="stylesheet" href="<?= base_url('assets/plugins/daterangepicker/daterangepicker.css') ?>">
     <!-- summernote -->
     <link rel="stylesheet" href="<?= base_url('assets/plugins/summernote/summernote-bs4.min.css') ?>">
+    <style>
+        .card-disabled {
+            background-color: #ccc;
+            opacity: 0.3;
+        }
+    </style>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
