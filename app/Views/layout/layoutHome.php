@@ -43,6 +43,7 @@
     <!-- jQuery UI 1.11.4 -->
     <script src="<?= base_url('assets/plugins/jquery-ui/jquery-ui.min.js') ?>"></script>
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script>
         $.widget.bridge('uibutton', $.ui.button)
     </script>
@@ -72,6 +73,43 @@
     <script src="<?= base_url('assets/dist/js/demo.js') ?>"></script>
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="<?= base_url('assets/dist/js/pages/dashboard.js') ?>"></script>
+
+    <!-- JSON Script -->
+    <script>
+        function addKeranjang(id) {
+            $.ajax({
+                url: "/pos",
+                type: "POST",
+                data: {
+                    'idProduk': id,
+                },
+                success: function(response) {
+                    $('#itemKeranjang').empty();
+                    JSON.parse(response)['data'].map((item, idx) => {
+                        let ele = '';
+                        ele += '<div class="callout callout-info">'
+                        ele += '<div class="row">'
+                        ele += '<div class="col-2 center">'
+                        ele += '<h3><span class="badge badge-primary">' + item.jumlah + '</span></h3>'
+                        ele += '</div>'
+                        ele += '<div class="col-8">'
+                        ele += '<h5>' + item.namaProduk + '</h5>'
+                        ele += '<p>' + item.hargaProduk + '</p>'
+                        ele += '</div>'
+                        ele += '<div class="col-2">'
+                        ele += '<button type="button" class="btn btn-danger"><i class="fas fa-trash"></i></button>'
+                        ele += '</div>'
+                        ele += '</div>'
+                        ele += '</div>'
+                        $('#itemKeranjang').append(ele);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.log('Error:', status, xhr);
+                }
+            })
+        }
+    </script>
 </body>
 
 </html>

@@ -62,9 +62,16 @@
                             <div class="card-body">
                                 <div class="row">
                                     <?php foreach ($produk as $key => $value) : ?>
-                                        <div class="col-md-3">
-                                            <div class="card shadow <?= $value->isReadyProduk ? '' : 'card-disabled' ?>">
-                                                <img src="<?= base_url('assets/images/' . $value->slugKategori . '/' . $value->gambarProduk) ?>" class="card-img-top">
+                                        <div class="col-md-3" <?= $value->isReadyProduk ? 'onclick="addKeranjang(' . $value->idProduk . ')"' : '' ?>>
+                                            <?= $value->isReadyProduk ? '' : '
+                                            <div class="ribbon-wrapper ribbon-lg">
+                                                <div class="ribbon bg-info text-lg">
+                                                    Habis
+                                                </div>
+                                            </div>
+                                            ' ?>
+                                            <div class="card shadow">
+                                                <img src="<?= base_url('assets/images/' . $value->slugKategori . '/' . $value->gambarProduk) ?>" class="card-img-top" style="height: 12rem;">
                                                 <div class="card-body">
                                                     <h5 class="card-title"><strong><?= $value->namaProduk ?> (<?= $value->skuProduk ?>)</strong></h5>
                                                     <p class="card-text"><?= number_to_currency($value->hargaProduk, 'IDR', 'id_ID'); ?></p>
@@ -82,7 +89,24 @@
                                 <h3><i class="fas fa-shopping-cart"></i> Keranjang</h3>
                             </div>
                             <div class="card-body">
-
+                                <div id="itemKeranjang">
+                                    <?php foreach ($keranjang as $key => $value) : ?>
+                                        <div class="callout callout-info">
+                                            <div class="row">
+                                                <div class="col-2 center">
+                                                    <h3><span class="badge badge-primary"><?= $value->jumlah ?></span></h3>
+                                                </div>
+                                                <div class="col-8">
+                                                    <h5><?= $value->namaProduk ?></h5>
+                                                    <p><?= number_to_currency($value->hargaProduk, 'IDR', 'id_ID'); ?></p>
+                                                </div>
+                                                <div class="col-2">
+                                                    <button type="button" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endforeach ?>
+                                </div>
                             </div>
                         </div>
                     </div>
