@@ -107,6 +107,10 @@
                                         </div>
                                     <?php endforeach ?>
                                 </div>
+                                <br>
+                                <div class="callout callout-info">
+                                    <h5 class="harga">Total : <?= number_to_currency((float)$total, 'IDR', 'id_ID', 2) ?></h5>
+                                </div>
                             </div>
                         </div>
                     </div>

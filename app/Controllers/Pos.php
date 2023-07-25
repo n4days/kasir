@@ -29,10 +29,15 @@ class Pos extends BaseController
         }
 
         $keranjang = $this->keranjangModel->findAll();
-        if (count($keranjang) == 0) {
-            $keranjang = $this->keranjangModel->findAll();
-        } else {
+        if (count($keranjang) > 0) {
             $keranjang = json_decode($keranjang[0]->data)->data;
+            $total = 0;
+            foreach ($keranjang as $key => $value) {
+                $total = $total + ((int)$value->jumlah * (int)$value->hargaProduk);
+            }
+        } else {
+            $keranjang = [];
+            $total = 0;
         }
 
         $data = [
@@ -41,6 +46,7 @@ class Pos extends BaseController
             'kategori' => $this->kategoriModel->findAll(),
             'produk' => $produk->getResult(),
             'keranjang' => $keranjang,
+            'total' => $total,
         ];
         return view('pos', $data);
     }

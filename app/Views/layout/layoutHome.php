@@ -85,7 +85,9 @@
                 },
                 success: function(response) {
                     $('#itemKeranjang').empty();
+                    let total = 0;
                     JSON.parse(response)['data'].map((item, idx) => {
+                        total = total + parseInt(item.jumlah) * parseInt(item.hargaProduk);
                         let ele = '';
                         ele += '<div class="callout callout-info">'
                         ele += '<div class="row">'
@@ -103,6 +105,12 @@
                         ele += '</div>'
                         $('#itemKeranjang').append(ele);
                     });
+                    $('.harga').empty();
+                    let formatCurrency = new Intl.NumberFormat('id-ID', {
+                        style: 'currency',
+                        currency: 'IDR',
+                    }).format(total)
+                    $('.harga').append('Total : ' + formatCurrency);
                 },
                 error: function(xhr, status, error) {
                     console.log('Error:', status, xhr);
