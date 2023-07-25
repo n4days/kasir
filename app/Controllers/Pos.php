@@ -61,6 +61,7 @@ class Pos extends BaseController
                 $itemKeranjang[$key] = $value;
             }
             $itemKeranjang['jumlah'] = 1;
+            $itemKeranjang['keterangan'] = '';
             $dataInsert = [
                 'id' => 1,
                 'data' => json_encode(['data' => [$itemKeranjang]])
@@ -72,6 +73,7 @@ class Pos extends BaseController
                 $itemKeranjang[$key] = $value;
             }
             $itemKeranjang['jumlah'] = 1;
+            $itemKeranjang['keterangan'] = '';
             $keranjangNew = array_merge($keranjang, [$itemKeranjang]);
             $jsonKeranjangNew = json_encode(['data' => $keranjangNew]);
             $dataArray = json_decode($jsonKeranjangNew, true);
@@ -111,5 +113,37 @@ class Pos extends BaseController
         $this->keranjangModel->update(1, $dataUpdate);
         $keranjangNew = $this->keranjangModel->where(['id' => 1])->findAll();
         echo $keranjangNew[0]->data;
+    }
+
+    public function bayarPesanan()
+    {
+        $keranjang = $this->keranjangModel->where(['id' => 1])->findAll();
+        if (count($keranjang) == 0) {
+            echo json_encode(['status' => false]);
+            exit;
+        }
+        $keranjang = json_decode($keranjang[0]->data)->data;
+        if (count($keranjang) > 0) {
+            echo json_encode(['status' => true]);
+        } else {
+            echo json_encode(['status' => false]);
+        }
+    }
+
+    public function simpanTransaksi()
+    {
+        $keranjangRaw = $this->keranjangModel->where(['id' => 1])->findAll();
+        $keranjang = json_decode($keranjangRaw[0]->data)->data;
+        $grandTotal = 0;
+        foreach ($keranjang as $key => $value) {
+            $grandTotal = $grandTotal + ((int)$value->jumlah * (int)$value->hargaProduk);
+        }
+        $dataSimpan = [
+            'user' => user()->email,
+            'grandTotal' => $grandTotal,
+            'cash' => $this->request->getVar('cash'),
+            'item' => $keranjangRaw[0]->data,
+        ];
+        dd($dataSimpan);
     }
 }

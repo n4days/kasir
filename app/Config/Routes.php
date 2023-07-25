@@ -33,6 +33,8 @@ $routes->get('/', 'Home::index');
 $routes->get('/pos', 'Pos::index');
 $routes->post('/pos', 'Pos::addKeranjang');
 $routes->post('/pos/keranjang', 'Pos::deleteKeranjang');
+$routes->post('/pos/bayar', 'Pos::bayarPesanan');
+$routes->post('/pos/pembayaran', 'Pos::simpanTransaksi');
 
 /*
  * --------------------------------------------------------------------

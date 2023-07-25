@@ -98,7 +98,7 @@
                                                 </div>
                                                 <div class="col-8">
                                                     <h5><?= $value->namaProduk ?></h5>
-                                                    <p><?= number_to_currency($value->hargaProduk, 'IDR', 'id_ID'); ?></p>
+                                                    <p><?= number_to_currency((float)$value->hargaProduk, 'IDR', 'id_ID'); ?></p>
                                                 </div>
                                                 <div class="col-2">
                                                     <button type="button" class="btn btn-danger" onclick="hapusKeranjang(<?= $value->idProduk ?>)"><i class="fas fa-trash"></i></button>
@@ -107,9 +107,9 @@
                                         </div>
                                     <?php endforeach ?>
                                 </div>
-                                <br>
-                                <div class="callout callout-info">
-                                    <h5 class="harga">Total : <?= number_to_currency((float)$total, 'IDR', 'id_ID', 2) ?></h5>
+                                <div class="callout callout-info d-flex align-items-center justify-content-between">
+                                    <h5 class="harga">Total : <?= number_to_currency((float)$total, 'IDR', 'id_ID') ?></h5>
+                                    <button type="submit" class="btn btn-success ml-auto" onclick="bayar('<?= user()->email ?>')">Bayar</button>
                                 </div>
                             </div>
                         </div>
@@ -124,5 +124,37 @@
     <?= view('layout/layoutHomeFooter.php') ?>
 </div>
 <!-- ./wrapper -->
+
+<!-- Modal Bayar -->
+<div class="modal fade" id="bayarModal" tabindex="-1" aria-labelledby="bayarModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="/pos/pembayaran" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bayarModalLabel">
+                        Modal title
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">
+                            &times;
+                        </span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-mid-12">
+                            <input type="number" name="cash" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">
+                        Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <?= $this->endSection() ?>
