@@ -89,7 +89,7 @@
                     JSON.parse(response)['data'].map((item, idx) => {
                         total = total + parseInt(item.jumlah) * parseInt(item.hargaProduk);
                         let ele = '';
-                        ele += '<div class="callout callout-info">'
+                        ele += '<div class="callout callout-info" id="itemProduk' + item.idProduk + '">'
                         ele += '<div class="row">'
                         ele += '<div class="col-2 center">'
                         ele += '<h3><span class="badge badge-primary">' + item.jumlah + '</span></h3>'
@@ -99,7 +99,7 @@
                         ele += '<p>' + item.hargaProduk + '</p>'
                         ele += '</div>'
                         ele += '<div class="col-2">'
-                        ele += '<button type="button" class="btn btn-danger"><i class="fas fa-trash"></i></button>'
+                        ele += '<button type="button" class="btn btn-danger" onclick="hapusKeranjang(' + item.idProduk + ')"><i class="fas fa-trash"></i></button>'
                         ele += '</div>'
                         ele += '</div>'
                         ele += '</div>'
@@ -116,6 +116,33 @@
                     console.log('Error:', status, xhr);
                 }
             })
+        }
+
+        function hapusKeranjang(id) {
+            $.ajax({
+                url: "/pos/keranjang",
+                type: "POST",
+                data: {
+                    'idProduk': id,
+                },
+                success: function(response) {
+                    let total = 0;
+                    JSON.parse(response)['data'].map((item, idx) => {
+                        total = total + parseInt(item.jumlah) * parseInt(item.hargaProduk)
+                    });
+                    let ele = document.getElementById('itemProduk' + id)
+                    ele.remove()
+                    $('.harga').empty();
+                    let formatCurrency = new Intl.NumberFormat('id-ID', {
+                        style: 'currency',
+                        currency: 'IDR',
+                    }).format(total)
+                    $('.harga').append('Total: ' + formatCurrency);
+                },
+                error: function(xhr, status, error) {
+                    console.log('Error: ', status, xhr);
+                }
+            });
         }
     </script>
 </body>

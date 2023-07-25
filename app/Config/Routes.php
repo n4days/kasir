@@ -32,6 +32,7 @@ $routes->set404Override();
 $routes->get('/', 'Home::index');
 $routes->get('/pos', 'Pos::index');
 $routes->post('/pos', 'Pos::addKeranjang');
+$routes->post('/pos/keranjang', 'Pos::deleteKeranjang');
 
 /*
  * --------------------------------------------------------------------

@@ -29,15 +29,14 @@ class Pos extends BaseController
         }
 
         $keranjang = $this->keranjangModel->findAll();
+        $total = 0;
         if (count($keranjang) > 0) {
             $keranjang = json_decode($keranjang[0]->data)->data;
-            $total = 0;
             foreach ($keranjang as $key => $value) {
                 $total = $total + ((int)$value->jumlah * (int)$value->hargaProduk);
             }
         } else {
             $keranjang = [];
-            $total = 0;
         }
 
         $data = [
@@ -91,6 +90,25 @@ class Pos extends BaseController
             ];
             $this->keranjangModel->update(1, $dataUpdate);
         }
+        $keranjangNew = $this->keranjangModel->where(['id' => 1])->findAll();
+        echo $keranjangNew[0]->data;
+    }
+
+    public function deleteKeranjang()
+    {
+        $id = $this->request->getVar('idProduk');
+        $keranjang = $this->keranjangModel->findAll();
+        $keranjang = json_decode($keranjang[0]->data)->data;
+        $itemKeranjang = [];
+        foreach ($keranjang as $key => $value) {
+            if ($value->idProduk !== $id) {
+                $itemKeranjang[] = $value;
+            }
+        }
+        $dataUpdate = [
+            'data' => json_encode(['data' => $itemKeranjang])
+        ];
+        $this->keranjangModel->update(1, $dataUpdate);
         $keranjangNew = $this->keranjangModel->where(['id' => 1])->findAll();
         echo $keranjangNew[0]->data;
     }
