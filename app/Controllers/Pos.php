@@ -5,18 +5,21 @@ namespace App\Controllers;
 use App\Models\KategoriModel;
 use App\Models\ProdukModel;
 use App\Models\KeranjangModel;
+use App\Models\TransaksiModel;
 
 class Pos extends BaseController
 {
     protected $kategoriModel;
     protected $produkModel;
     protected $keranjangModel;
+    protected $transaksiModel;
 
     public function __construct()
     {
         $this->kategoriModel = new KategoriModel();
         $this->produkModel = new ProdukModel();
         $this->keranjangModel = new KeranjangModel();
+        $this->transaksiModel = new TransaksiModel();
     }
 
     public function index()
@@ -139,11 +142,17 @@ class Pos extends BaseController
             $grandTotal = $grandTotal + ((int)$value->jumlah * (int)$value->hargaProduk);
         }
         $dataSimpan = [
-            'user' => user()->email,
-            'grandTotal' => $grandTotal,
-            'cash' => $this->request->getVar('cash'),
-            'item' => $keranjangRaw[0]->data,
+            'emailKasirTransaksi' => user()->email,
+            'grandTotalTransaksi' => $grandTotal,
+            'cashTransaksi' => $this->request->getVar('cash'),
+            'itemTransaksi' => $keranjangRaw[0]->data,
+            'tanggalBayarTransaksi' => date('Y-m-d H:i:s'),
         ];
-        dd($dataSimpan);
+        // dd($dataSimpan);
+        $this->transaksiModel->insert($dataSimpan);
+        if ($this->transaksiModel->insert($dataSimpan)) {
+            $this->keranjangModel->delete(1);
+        }
+        return redirect()->to('/pos');
     }
 }

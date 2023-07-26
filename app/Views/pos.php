@@ -142,8 +142,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-mid-12">
-                            <input type="number" name="cash" class="form-control">
+                        <div class="col-md-12">
+                            <input type="number" min=0 name="cash" class="form-control">
                         </div>
                     </div>
                 </div>

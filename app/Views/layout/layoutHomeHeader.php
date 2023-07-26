@@ -177,14 +177,26 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="/pos" class="nav-link">
-                        <i class="nav-icon fas fa-th"></i>
-                        <p>
-                            POS
-                        </p>
-                    </a>
-                </li>
+                <?php if (in_groups('3')) : ?>
+                    <li class="nav-item">
+                        <a href="/produk" class="nav-link">
+                            <i class="nav-icon fas fa-th"></i>
+                            <p>
+                                Produk
+                            </p>
+                        </a>
+                    </li>
+                <?php endif ?>
+                <?php if (in_groups(['3', '2'])) : ?>
+                    <li class="nav-item">
+                        <a href="/pos" class="nav-link">
+                            <i class="nav-icon fas fa-th"></i>
+                            <p>
+                                POS
+                            </p>
+                        </a>
+                    </li>
+                <?php endif ?>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->
