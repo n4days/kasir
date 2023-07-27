@@ -38,6 +38,7 @@ $routes->post('/pos/pembayaran', 'Pos::simpanTransaksi');
 $routes->get('/produk', 'Produk::index', ['filter' => 'role:manager']);
 $routes->post('/produk', 'Produk::addProduk');
 $routes->delete('/produk/(:num)', 'Produk::deleteProduk/$1');
+$routes->put('/produk/(:num)', 'Produk::editProduk/$1');
 
 /*
  * --------------------------------------------------------------------

@@ -52,6 +52,30 @@ class Produk extends BaseController
         };
     }
 
+    public function editProduk($idProduk)
+    {
+        // dd($_POST);
+        // dd($this->request->getFile('gambarProdukView'));
+        $kategori = explode(',', $this->request->getVar('kategoriProdukView'));
+        $foto = $this->request->getFile('gambarProdukView');
+        $fotoName = $foto->getRandomName();
+        $ketersediaan = $this->request->getVar('isReadyProdukView');
+        $dataUpdate = [
+            'skuProduk' => $this->request->getVar('skuProdukView'),
+            'namaProduk' => $this->request->getVar('namaProdukView'),
+            'hargaProduk' => $this->request->getVar('hargaProdukView'),
+            'isReadyProduk' => boolval($ketersediaan),
+            'gambarProduk' => $fotoName,
+            'kategoriProduk' => $kategori[0],
+        ];
+
+        if ($foto->move('assets/images/' . $kategori[1] . '/', $fotoName, true)) {
+            if ($this->produkModel->update($idProduk, $dataUpdate)) {
+                return redirect()->to('/produk');
+            };
+        };
+    }
+
     public function deleteProduk($idProduk)
     {
         $kategori = explode(',', $this->request->getVar('fotoInfoView'));

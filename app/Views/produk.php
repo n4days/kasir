@@ -50,6 +50,7 @@
                                                 <th scope="col">Harga</th>
                                                 <th scope="col">Foto Produk</th>
                                                 <th scope="col">Kategori</th>
+                                                <th scope="col">Ketersediaan</th>
                                                 <th scope="col">Action</th>
                                             </tr>
                                         </thead>
@@ -63,8 +64,9 @@
                                                     <td><?= number_to_currency((float)$value->hargaProduk, 'IDR', 'id_ID'); ?></td>
                                                     <td><button class="btn btn-info" data-toggle="modal" data-target="#imageModal<?= $value->idProduk ?>"><i class="fas fa-image"></i> Lihat</button></td>
                                                     <td><?= $value->namaKategori ?></td>
+                                                    <td><?= $value->isReadyProduk == 1 ? 'Tersedia' : 'Habis' ?></td>
                                                     <td>
-                                                        <button type="button" class="btn btn-warning"><i class="fas fa-edit"></i></button>
+                                                        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#editProdukModal<?= $value->idProduk ?>"><i class="fas fa-edit"></i></button>
                                                         <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#hapusProdukModal<?= $value->idProduk ?>"><i class="fas fa-trash"></i></button>
                                                     </td>
                                                 </tr>
@@ -119,6 +121,70 @@
                             <div class="form-group">
                                 <label>Foto Produk</label>
                                 <input type="file" class="form-control" name="gambarProdukView">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <?php endforeach ?>
+
+    <!-- Modal button-editProduk -->
+    <?php foreach ($produk as $key => $valueProduk) : ?>
+        <div class="modal fade" id="editProdukModal<?= $valueProduk->idProduk ?>" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Edit Produk <strong><?= $valueProduk->namaProduk ?></strong></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/produk/<?= $valueProduk->idProduk ?>" method="post" enctype="multipart/form-data">
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="_method" value="PUT">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>Kategori</label>
+                                <select class="form-control" name="kategoriProdukView">
+                                    <option value="<?= $valueProduk->idKategori ?>,<?= $valueProduk->slugKategori ?>"><?= $valueProduk->namaKategori ?></option>
+                                    <?php foreach ($kategori as $key => $valueKategori) : ?>
+                                        <?php if ($valueKategori->idKategori != $valueProduk->idKategori) : ?>
+                                            <option value="<?= $valueKategori->idKategori ?>,<?= $valueKategori->slugKategori ?>"><?= $valueKategori->namaKategori ?></option>
+                                        <?php endif ?>
+                                    <?php endforeach ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Nama</label>
+                                <input type="text" class="form-control" name="namaProdukView" placeholder="<?= $valueProduk->namaProduk ?>">
+                            </div>
+                            <div class="form-group">
+                                <label>Sku Produk</label>
+                                <input type="text" class="form-control" name="skuProdukView" placeholder="<?= $valueProduk->skuProduk ?>">
+                            </div>
+                            <div class="form-group">
+                                <label>Harga</label>
+                                <input type="text" class="form-control" name="hargaProdukView" placeholder="<?= $valueProduk->hargaProduk ?>">
+                            </div>
+                            <div class="form-group">
+                                <label>Ketersediaan</label>
+                                <select class="form-control" name="isReadyProdukView">
+                                    <option value="<?= $valueProduk->isReadyProduk ?>"><?= $valueProduk->isReadyProduk == 1 ? 'Tersedia' : 'Habis' ?></option>
+                                    <?php for ($i = 0; $i < 2; $i++) : ?>
+                                        <?php if ($valueProduk->isReadyProduk != $i) : ?>
+                                            <option value="<?= $i ?>"><?= $i == 1 ? 'Tersedia' : 'Habis' ?></option>
+                                        <?php endif ?>
+                                    <?php endfor ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Foto Produk</label>
+                                <input type="file" class="form-control" name="gambarProdukView" placeholder="<?= $valueProduk->gambarProduk ?>">
                             </div>
                         </div>
                         <div class="modal-footer">

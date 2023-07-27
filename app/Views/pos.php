@@ -65,7 +65,7 @@
                                         <div class="col-md-3" <?= $value->isReadyProduk ? 'onclick="addKeranjang(' . $value->idProduk . ')"' : '' ?>>
                                             <?= $value->isReadyProduk ? '' : '
                                             <div class="ribbon-wrapper ribbon-lg">
-                                                <div class="ribbon bg-info text-lg">
+                                                <div class="ribbon bg-danger text-lg">
                                                     Habis
                                                 </div>
                                             </div>
