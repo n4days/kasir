@@ -30,7 +30,7 @@ $routes->set404Override();
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
-$routes->get('/pos', 'Pos::index', ['filter' => 'role:manager,kasir']);
+$routes->get('/pos', 'Pos::index', ['filter' => 'role:manager,kasir,supervisor']);
 $routes->post('/pos', 'Pos::addKeranjang');
 $routes->post('/pos/keranjang', 'Pos::deleteKeranjang');
 $routes->post('/pos/bayar', 'Pos::bayarPesanan');
@@ -39,6 +39,7 @@ $routes->get('/produk', 'Produk::index', ['filter' => 'role:manager']);
 $routes->post('/produk', 'Produk::addProduk');
 $routes->delete('/produk/(:num)', 'Produk::deleteProduk/$1');
 $routes->put('/produk/(:num)', 'Produk::editProduk/$1');
+$routes->get('/laporan', 'Laporan::index', ['filter' => 'role:manager,supervisor']);
 
 /*
  * --------------------------------------------------------------------
