@@ -57,4 +57,25 @@ class Laporan extends BaseController
         ];
         return view('laporan', $data);
     }
+
+    public function print()
+    {
+        $auth_groups_users = $this->authGroupsUsersModel->getAuthGroupsUsers();
+        $transaksi = $this->transaksiModel->findAll();
+        $i = 0;
+        foreach ($transaksi as $key => $valueTransaksi) {
+            $transaksi_itemTransaksi[$i] = json_decode($transaksi[$i]->itemTransaksi)->data;
+            $i++;
+        }
+        $data = [
+            'title' => 'Laporan',
+            'breadcrumbs' => ['Home', 'Laporan'],
+            'auth_groups_users' => $auth_groups_users->getResult(),
+            'auth_groups' => $this->authGroupsModel->findAll(),
+            'users' => $this->usersModel->findAll(),
+            'transaksi' => $transaksi,
+            'itemTransaksi' => $transaksi_itemTransaksi,
+        ];
+        return view('printlaporan', $data);
+    }
 }

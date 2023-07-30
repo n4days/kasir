@@ -40,6 +40,7 @@ $routes->post('/produk', 'Produk::addProduk');
 $routes->delete('/produk/(:num)', 'Produk::deleteProduk/$1');
 $routes->put('/produk/(:num)', 'Produk::editProduk/$1');
 $routes->get('/laporan', 'Laporan::index', ['filter' => 'role:manager,supervisor']);
+$routes->get('/printlaporan', 'Laporan::print', ['filter' => 'role:manager,supervisor']);
 
 /*
  * --------------------------------------------------------------------
