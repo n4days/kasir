@@ -71,7 +71,7 @@
                                             </div>
                                             ' ?>
                                             <div class="card shadow">
-                                                <img src="<?= base_url('assets/images/' . $value->slugKategori . '/' . $value->gambarProduk) ?>" class="card-img-top" style="height: 12rem;">
+                                                <img src="<?= 'http://localhost:4444/assets/images/' . $value->slugKategori . '/' . $value->gambarProduk ?>" class="card-img-top" style="height: 12rem;">
                                                 <div class="card-body">
                                                     <h5 class="card-title"><strong><?= $value->namaProduk ?> (<?= $value->skuProduk ?>)</strong></h5>
                                                     <p class="card-text"><?= number_to_currency($value->hargaProduk, 'IDR', 'id_ID'); ?></p>

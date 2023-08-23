@@ -147,6 +147,7 @@
                     <form action="/produk/<?= $valueProduk->idProduk ?>" method="post" enctype="multipart/form-data">
                         <?= csrf_field() ?>
                         <input type="hidden" name="_method" value="PUT">
+                        <input type="hidden" name="fotoInfoView" value="<?= $valueProduk->gambarProduk ?>">
                         <div class="modal-body">
                             <div class="form-group">
                                 <label>Kategori</label>
@@ -237,7 +238,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <td><img class="img-fluid" src="<?= base_url('assets/images/' . $value->slugKategori . '/' . $value->gambarProduk) ?>"></td>
+                        <td><img class="img-fluid" src="<?= 'http://localhost:4444/assets/images/' . $value->slugKategori . '/' . $value->gambarProduk ?>"></td>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

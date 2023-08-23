@@ -2,33 +2,33 @@
 
 namespace App\Controllers;
 
-use App\Models\KategoriModel;
-use App\Models\ProdukModel;
 use App\Models\KeranjangModel;
 use App\Models\TransaksiModel;
+use App\Models\KategoriAPIModel;
+use App\Models\ProdukAPIModel;
 
 class Pos extends BaseController
 {
-    protected $kategoriModel;
-    protected $produkModel;
     protected $keranjangModel;
     protected $transaksiModel;
+    protected $kategoriAPIModel;
+    protected $produkAPIModel;
 
     public function __construct()
     {
-        $this->kategoriModel = new KategoriModel();
-        $this->produkModel = new ProdukModel();
         $this->keranjangModel = new KeranjangModel();
         $this->transaksiModel = new TransaksiModel();
+        $this->kategoriAPIModel = new KategoriAPIModel();
+        $this->produkAPIModel = new ProdukAPIModel();
     }
 
     public function index()
     {
         $kat = $this->request->getVar('kat');
         if ($kat) {
-            $produk = $this->produkModel->getProdukSearch($kat);
+            $produk = $this->produkAPIModel->getProdukSearch($kat);
         } else {
-            $produk = $this->produkModel->getProduk();
+            $produk = $this->produkAPIModel->getProduk();
         }
 
         $keranjang = $this->keranjangModel->findAll();
@@ -45,8 +45,8 @@ class Pos extends BaseController
         $data = [
             'title' => 'POS',
             'breadcrumbs' => ['Home', 'Pos'],
-            'kategori' => $this->kategoriModel->findAll(),
-            'produk' => $produk->getResult(),
+            'kategori' => $this->kategoriAPIModel->getKategori(),
+            'produk' => $produk,
             'keranjang' => $keranjang,
             'total' => $total,
         ];
@@ -56,7 +56,7 @@ class Pos extends BaseController
     public function addKeranjang()
     {
         $id = $this->request->getVar('idProduk');
-        $produk = $this->produkModel->where(['idProduk' => $id])->first();
+        $produk = $this->produkAPIModel->getProdukById($id)[0];
         $keranjang = $this->keranjangModel->findAll();
         $itemKeranjang = [];
         if (count($keranjang) == 0) {
@@ -97,6 +97,7 @@ class Pos extends BaseController
         }
         $keranjangNew = $this->keranjangModel->where(['id' => 1])->findAll();
         echo $keranjangNew[0]->data;
+        // echo json_encode([$produk1, $produk[0]]);
     }
 
     public function deleteKeranjang()

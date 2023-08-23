@@ -2,87 +2,139 @@
 
 namespace App\Controllers;
 
-use App\Models\ProdukModel;
-use App\Models\KategoriModel;
-use CodeIgniter\Router\Exceptions\RedirectException;
+use App\Models\ProdukAPIModel;
+use App\Models\KategoriAPIModel;
+use CodeIgniter\HTTP\Files\UploadedFile;
+
 
 class Produk extends BaseController
 {
-    protected $produkModel;
-    protected $kategoriModel;
+    protected $kategoriAPIModel;
+    protected $produkAPIModel;
+    protected $curl;
 
     public function __construct()
     {
-        $this->produkModel = new ProdukModel();
-        $this->kategoriModel = new KategoriModel();
+        $this->kategoriAPIModel = new KategoriAPIModel();
+        $this->produkAPIModel = new ProdukAPIModel();
+        $this->curl = service('curlrequest');
     }
 
     public function index()
     {
-        $produk = $this->produkModel->getProduk();
+        $produk = $this->produkAPIModel->getProduk();
         $data = [
             'title' => 'Produk',
             'breadcrumbs' => ['Home', 'Produk'],
-            'produk' => $produk->getResult(),
-            'kategori' => $this->kategoriModel->findAll(),
+            'produk' => $produk,
+            'kategori' => $this->kategoriAPIModel->getKategori(),
         ];
         return view('produk', $data);
     }
 
     public function addProduk()
     {
-        // dd($_POST);
-        // dd($this->request->getFile('gambarProdukView'));
+
+        // $file = [
+        //     'name' => 'gambarProdukView',
+        //     'contents' => fopen(new UploadedFile($_FILES['gambarProdukView']['tmp_name'], true), 'r'),
+        //     'filename' => $_FILES['gambarProdukView']['tmp_name']
+        // ];
+        // $post_data = [
+        //     'foo'      => 'bar',
+        //     'userfile' => new \CURLFile('C:\Users\n4days\Downloads\pancake.jpeg'),
+        // ];
+        // dd($post_data);
+        // $data = [];
+        // foreach ($_POST as $key => $value) {
+        //     $data[] = [
+        //         'name' => $key,
+        //         'contents' => $value
+        //     ];
+        // }
+        // $exe = $this->produkAPIModel->insert($post_data);
+
+        // if ($exe->status) {
+        //     return redirect()->to('/produk');
+        // }
+        $file = $this->request->getFile('gambarProdukView');
         $kategori = explode(',', $this->request->getVar('kategoriProdukView'));
-        $foto = $this->request->getFile('gambarProdukView');
-        $fotoName = $foto->getRandomName();
+        // $data = [
+        //     'image' => curl_file_create($file->getTempName(), $file->getClientMimeType(), $file->getName()),
+        //     'name' => $this->request->getVar('namaProdukView'),
+        // ];
         $dataInsert = [
             'skuProduk' => $this->request->getVar('skuProdukView'),
             'namaProduk' => $this->request->getVar('namaProdukView'),
             'hargaProduk' => $this->request->getVar('hargaProdukView'),
             'isReadyProduk' => 1,
-            'gambarProduk' => $fotoName,
+            'gambarProduk' => curl_file_create($file->getTempName(), $file->getClientMimeType(), $file->getName()),
             'kategoriProduk' => $kategori[0],
+            'kategoriSlug' => $kategori[1],
         ];
 
-        if ($foto->move('assets/images/' . $kategori[1] . '/', $fotoName, true)) {
-            if ($this->produkModel->insert($dataInsert)) {
-                return redirect()->to('/produk');
-            };
-        };
+        $exe = $this->produkAPIModel->insert($dataInsert);
+
+        if ($exe->status) {
+            return redirect()->to('/produk');
+        }
+        // $result = $this->curl->post('http://localhost:4444/testUpload', ['debug' => true, 'multipart' => $dataInsert]);
+        // return json_decode($result->getBody());
     }
 
     public function editProduk($idProduk)
     {
         // dd($_POST);
         // dd($this->request->getFile('gambarProdukView'));
+        // $kategori = explode(',', $this->request->getVar('kategoriProdukView'));
+        // $foto = $this->request->getFile('gambarProdukView');
+        // $fotoName = $foto->getRandomName();
+        // $ketersediaan = $this->request->getVar('isReadyProdukView');
+        // $dataUpdate = [
+        //     'skuProduk' => $this->request->getVar('skuProdukView'),
+        //     'namaProduk' => $this->request->getVar('namaProdukView'),
+        //     'hargaProduk' => $this->request->getVar('hargaProdukView'),
+        //     'isReadyProduk' => boolval($ketersediaan),
+        //     'gambarProduk' => $fotoName,
+        //     'kategoriProduk' => $kategori[0],
+        // ];
+
+        // if ($foto->move('assets/images/' . $kategori[1] . '/', $fotoName, true)) {
+        //     if ($this->produkAPIModel->update($idProduk, $dataUpdate)) {
+        //         return redirect()->to('/produk');
+        //     };
+        // };
+        $file = $this->request->getFile('gambarProdukView');
         $kategori = explode(',', $this->request->getVar('kategoriProdukView'));
-        $foto = $this->request->getFile('gambarProdukView');
-        $fotoName = $foto->getRandomName();
-        $ketersediaan = $this->request->getVar('isReadyProdukView');
-        $dataUpdate = [
+        $dataInsert = [
             'skuProduk' => $this->request->getVar('skuProdukView'),
             'namaProduk' => $this->request->getVar('namaProdukView'),
             'hargaProduk' => $this->request->getVar('hargaProdukView'),
-            'isReadyProduk' => boolval($ketersediaan),
-            'gambarProduk' => $fotoName,
+            'isReadyProduk' => $this->request->getVar('isReadyProdukView'),
+            'gambarProduk' => curl_file_create($file->getTempName(), $file->getClientMimeType(), $file->getName()),
+            'gambarProdukLama' => $this->request->getVar('fotoInfoView'),
             'kategoriProduk' => $kategori[0],
+            'kategoriSlug' => $kategori[1],
         ];
-
-        if ($foto->move('assets/images/' . $kategori[1] . '/', $fotoName, true)) {
-            if ($this->produkModel->update($idProduk, $dataUpdate)) {
-                return redirect()->to('/produk');
-            };
-        };
+        // dd($dataInsert);
+        $exe = $this->produkAPIModel->update($idProduk, $dataInsert);
+        if ($exe->status) {
+            return redirect()->to('/produk');
+        }
     }
 
     public function deleteProduk($idProduk)
     {
+        // dd($_POST);
         $kategori = explode(',', $this->request->getVar('fotoInfoView'));
-        if (unlink('assets/images/' . $kategori[0] . '/' . $kategori[1])) {
-            if ($this->produkModel->delete($idProduk)) {
-                return redirect()->to('/produk');
-            };
-        };
+        $dataInsert = [
+            'kategoriSlug' => $kategori[0],
+            'gambarProduk' => $kategori[1],
+        ];
+        $exe = $this->produkAPIModel->delete($idProduk, $dataInsert);
+
+        if ($exe->status) {
+            return redirect()->to('/produk');
+        }
     }
 }

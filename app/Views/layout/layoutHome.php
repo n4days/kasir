@@ -84,6 +84,7 @@
                     'idProduk': id,
                 },
                 success: function(response) {
+                    // console.log(response);
                     $('#itemKeranjang').empty();
                     let total = 0;
                     JSON.parse(response)['data'].map((item, idx) => {
